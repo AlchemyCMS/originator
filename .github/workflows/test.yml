@@ -1,0 +1,35 @@
+name: Test
+
+concurrency:
+  group: test-${{ github.ref_name }}
+  cancel-in-progress: ${{ github.ref_name != 'main' }}
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  Test:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ruby: "3.4"
+          - ruby: "4.0"
+    env:
+      RUBY_YJIT_ENABLE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          rubygems: "latest"
+      - name: Run tests
+        run: bundle exec rake
