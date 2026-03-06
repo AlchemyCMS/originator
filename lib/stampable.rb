@@ -89,7 +89,7 @@ module Ddb #:nodoc:
           self.userstamp_optional = !!defaults[:optional]
 
           class_eval do
-            klass = "::#{stamper_class_name.to_s.singularize.camelize}"
+            klass = stamper_class_name.to_s.camelize
             belongs_to :creator, :class_name => klass, :foreign_key => creator_attribute, optional: userstamp_optional
             belongs_to :updater, :class_name => klass, :foreign_key => updater_attribute, optional: userstamp_optional
 
